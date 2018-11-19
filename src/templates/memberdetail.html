@@ -18,7 +18,11 @@
                     <div class="card-body">
                         <div>
                             <strong>Location:</strong>
-                            <p>{{ user.city }}, {{ user.country }}</p>
+                            {% if user.city or user.country %}
+                                <p>{{ user.city }}, {{ user.country }}</p>
+                            {% else %}
+                                Not Available
+                            {% endif %}
                         </div>
                         <div>
                             <strong>Age:</strong>
@@ -71,7 +75,7 @@
                     </ul>
                     <div class="tab-content">
                         <div id="about" class="container tab-pane active"><br>
-                            <p>{{ user.description }}</p>
+                            <p>{{ user.about }}</p>
                         </div>
                         <div id="interests" class="container tab-pane fade"><br>
                             <p>{{ user.interests }}</p>
