@@ -1,0 +1,52 @@
+{% extends 'layouts/app.html' %}
+
+{% block content %}
+    {% load static %}
+    {% load is_liked_by_me %}
+
+    <div class="text-center mt-3">
+        <h2>{{ likes.count }} people liked you</h2>
+    </div>
+
+    <div class="container mt-3">
+
+        <div class="row">
+            {% for like in likes %}
+                <div class="col-sm-6 col-md-4 col-lg-4 col-xl-2">
+                    <div class="card mb-4">
+                        <div class="card-img-wrapper">
+                            <img class="card-img-top img-thumbnail" src="{% static 'images/user.png' %}" alt="">
+                            <ul class="list-inline member-icons animate text-center">
+                                <li class="list-inline-item">
+                                    <a href="{% url 'app:member_detail' like.user.id %}" class="btn btn-primary"
+                                       title="Show profile">
+                                        <i style="color: #fff;" class="fa fa-user"></i>
+                                    </a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <button class="btn btn-primary" title="Send Message">
+                                        <i class="fa fa-envelope"></i>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body p-1">
+                            <h6 class="card-title text-center mb-1"><i class="fa fa-user"></i>
+                                {{ like.user.username }}
+                            </h6>
+                            <p class="card-text text-muted text-center">Age:
+                                <small>{{ like.user.age }}</small>
+                            </p>
+                            <p class="card-text text-muted text-center">Dhaka</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-center">
+
+    </div>
+
+{% endblock %}

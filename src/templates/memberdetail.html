@@ -1,0 +1,98 @@
+{% extends 'layouts/app.html' %}
+
+{% block content %}
+
+    {% load static %}
+    {% load is_liked_by_me %}
+
+    <div class="container mt-4">
+        <div class="row">
+            <h1>{{ user.username }}'s Profile</h1>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="card">
+
+                    <img class="card-img-top img-thumbnail" src="{% static 'images/user.png' %}" alt="">
+
+                    <div class="card-body">
+                        <div>
+                            <strong>Location:</strong>
+                            <p>{{ user.city }}, {{ user.country }}</p>
+                        </div>
+                        <div>
+                            <strong>Age:</strong>
+                            <p>{{ user.age }}</p>
+                        </div>
+                        <div>
+                            <strong>Last Active:</strong>
+                            <p>{{ user.updated_at }}</p>
+                        </div>
+                        <div>
+                            <strong>Member Since:</strong>
+                            <p>{{ user.created_at }}</p>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="btn-group d-flex">
+                            {% is_liked_by_me user request.user as is_liked %}
+                            {% if is_liked %}
+                                <form action="{% url 'app:dislike' user.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" style="color: #ffffff" class="btn btn-danger w-100">
+                                        Liked
+                                    </button>
+                                </form>
+                            {% else %}
+                                <form action="{% url 'app:like' user.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" style="color: #ffffff" class="btn btn-primary w-100">
+                                        Like
+                                    </button>
+                                </form>
+                            {% endif %}
+                            <button class="btn btn-success w-100">Message</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-8">
+                <div class="tab-panel">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#about">Abut</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#interests">Interests</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#photos">Photos</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="about" class="container tab-pane active"><br>
+                            <p>{{ user.description }}</p>
+                        </div>
+                        <div id="interests" class="container tab-pane fade"><br>
+                            <p>{{ user.interests }}</p>
+                        </div>
+                        <div id="photos" class="container tab-pane fade"><br>
+                            <div class="row">
+                                {#                                @forelse($user->photos as $photo)#}
+                                {#                                <a href="{{ asset($photo->path)}}" data-toggle="lightbox" data-gallery="example-gallery"#}
+                                {#                                   class="col-sm-4">#}
+                                {#                                    <img src="{{ asset($photo->path)}}" class="img-fluid">#}
+                                {#                                </a>#}
+                                {#                                @empty#}
+                                {#                                <h2>No Photos uploaded yet!</h2>#}
+                                {#                                @endforelse#}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

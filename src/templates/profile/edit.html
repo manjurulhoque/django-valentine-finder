@@ -1,0 +1,136 @@
+{% extends 'layouts/app.html' %}
+
+{% block content %}
+
+    {% load static %}
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-sm-4">
+                <h1>Your Profile</h1>
+            </div>
+            {#            <div class="col-sm-8">#}
+            {#                <div class="alert alert-success">#}
+            {#                    <strong>Information:</strong> Success#}
+            {#                </div>#}
+            {#            </div>#}
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="card">
+                    <img class="card-img-top img-thumbnail" src="{{ user.profile_picture.url }}" alt="">
+                    <div class="card-body">
+                        <div>
+                            <strong>Location:</strong>
+                            <p>{{ user.city }}, {{ user.country }}</p>
+                        </div>
+                        <div>
+                            <strong>Age:</strong>
+                            <p>{{ user.age }}</p>
+                        </div>
+                        <div>
+                            <strong>Last Active:</strong>
+                            <p>{{ user.updated_at }}</p>
+                        </div>
+                        <div>
+                            <strong>Member Since:</strong>
+                            <p>{{ user.created_at }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-8">
+                <div class="tab-panel">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#edit_profile">Edit Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#photos">Photos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#upload_photos">Upload Photos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#profile_photos">Upload Profile Photo</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="edit_profile" class="container tab-pane active"><br>
+                            <form action="{% url 'accounts:profile_edit' %}" method="post">
+                                {% csrf_token %}
+                                <h4>Description</h4>
+                                <textarea class="form-control" required name="description"
+                                          rows="6">{{ user.about }}</textarea>
+                                <h4>Looking For</h4>
+                                <textarea class="form-control" required name="looking_for"
+                                          rows="6">{{ user.looking_for }}</textarea>
+                                <h4>Interests</h4>
+                                <textarea class="form-control" required name="interests"
+                                          rows="6">{{ user.interests }}</textarea>
+                                <h4>Location Details:</h4>
+                                <div class="form-inline">
+                                    <label for="city">City</label>
+                                    <input type="text" class="form-control" required
+                                           value="{% if user.city %}{{ user.city }}{% endif %}"
+                                           name="city">
+                                    <label for="country">Country</label>
+                                    <input type="text" class="form-control" required
+                                           value="{% if user.country %}{{ user.country }}{% endif %}"
+                                           name="country">
+                                </div>
+
+                                <button type="submit" style="margin-top: 20px" class="btn btn-success btn-block">Save
+                                    Changes
+                                </button>
+                            </form>
+                        </div>
+                        <div id="photos" class="container tab-pane">
+                            <div class="row">
+
+                                <a href="" data-toggle="lightbox" data-gallery="example-gallery"
+                                   class="col-sm-4">
+                                    <i class="fa fa-close pull-right"></i>
+                                    <img src="" class="img-fluid">
+                                </a>
+
+                            </div>
+                        </div>
+                        <div id="upload_photos" class="container tab-pane">
+                            <div class="col-md-5">
+
+                                <form action="" method="post"
+                                      enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <h3>Add Photos</h3>
+
+                                    <input type="file" accept="image/*" multiple name="photos[]" required/><br/>
+
+                                    <input type="submit" class="btn btn-primary" style="margin-top: 20px">
+
+                                </form>
+                            </div>
+                        </div>
+                        <div id="profile_photos" class="container tab-pane">
+                            <div class="col-md-5">
+
+                                <form action="{% url 'accounts:profile_picture_upload' %}" method="post"
+                                      enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <h3>Add Profile Photo</h3>
+
+                                    <input type="file" accept="image/*" name="photo" required/><br/>
+
+                                    <input type="submit" class="btn btn-success" style="margin-top: 20px">
+
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

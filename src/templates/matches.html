@@ -1,0 +1,128 @@
+{% extends 'layouts/app.html' %}
+
+{% block content %}
+    {% load static %}
+    {% load is_liked_by_me %}
+
+    <div class="container mt-3">
+        <div class="text-center mt-3">
+            <h2>Your matches - {{ matches.count }} found</h2>
+        </div>
+
+        <form class="form-inline" action="{% url 'app:filter' %}" method="get">
+            <div class="form-group">
+                <label for="minAge">Age From</label>
+                <input type="number" class="form-control ml-1" style="width: 70px" value="18" id="minAge" name="minAge">
+            </div>
+
+            <div class="form-group px-2">
+                <label for="maxAge">Age To</label>
+                <input type="number" class="form-control ml-1" style="width: 70px" value="99" id="maxAge" name="maxAge">
+            </div>
+
+            <div class="form-group px-2">
+                <label for="gender">Show: </label>
+                <select class="form-control ml-1" style="width: 130px" id="gender" name="gender">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-success" style="margin-left:10px">Apply Filters</button>
+            <button type="reset" class="btn btn-info" style="margin-left:10px">
+                Reset Filter
+            </button>
+        </form>
+        <br>
+
+        <div class="row">
+            {% for match in matches %}
+
+                <div class="col-md-3">
+                    <div class="card mb-4">
+                        <div class="card-img-wrapper">
+                            <img class="card-img-top img-thumbnail" src="{% static "images/user.png" %}" alt="">
+                            <ul class="list-inline member-icons animate text-center">
+                                <li class="list-inline-item">
+                                    <a href="{% url 'app:member_detail' match.id %}" class="btn btn-primary"
+                                       title="Show profile">
+                                        <i style="color: #fff;" class="fa fa-user"></i>
+                                    </a>
+                                </li>
+                                <li class="list-inline-item">
+                                    {% is_liked_by_me match request.user as is_liked %}
+                                    {% if is_liked %}
+                                        <form action="{% url 'app:dislike' match.id %}" method="post">
+                                            {% csrf_token %}
+                                            <button class="btn btn-primary" title="Dislike it">
+                                                <i style="color: #ff3f3e" class="fa fa-heart"></i>
+                                            </button>
+                                        </form>
+                                    {% else %}
+                                        <form action="{% url 'app:like' match.id %}" method="post">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-primary" title="Like it">
+                                                <i class="fa fa-heart"></i>
+                                            </button>
+                                        </form>
+                                    {% endif %}
+                                </li>
+                                <li class="list-inline-item">
+                                    <a href="" class="btn btn-primary"
+                                       title="Send Message">
+                                        <i style="color: #ffffff;" class="fa fa-envelope"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body p-1">
+                            <h6 class="card-title text-center mb-1"><i class="fa fa-user"></i>
+                                {{ match.username }}
+                            </h6>
+                            <p class="card-text text-muted text-center">Age:
+                                <small>{{ match.age }}</small>
+                            </p>
+                            <p class="card-text text-muted text-center">Dhaka</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="row justify-content-center">
+            {% if is_paginated %}
+                <nav>
+                    <ul class="pagination">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+                        {% endif %}
+                        {% for i in page_obj.paginator.page_range %}
+                            {% if page_obj.number == i %}
+                                <li class="page-item active">
+                                    <a class="page-link" href="#">
+                                        {{ i }} <span class="sr-only">(current)</span>
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled"><span>&raquo;</span></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}
