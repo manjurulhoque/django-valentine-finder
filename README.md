@@ -12,4 +12,4 @@
 <img src="screenshots/three.png" height="500">
 
 # Update profile and also update image
-<img src="screenshots/four.png" width="400" height="500">
+<img src="screenshots/four.png" height="500">
