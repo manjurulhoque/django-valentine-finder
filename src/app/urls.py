@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 
 from app.views import index, MatchesListView, MemberDetailView, like, dislike, LikedMeListView, WhomILikedListView, \
     MatchesFilterListView
@@ -8,6 +8,7 @@ app_name = "app"
 
 urlpatterns = [
     path('', index),
+    path('api/', include('app.api.urls')),
     path('matches', login_required(MatchesListView.as_view(), login_url='/login'), name='matches'),
     path('members/<int:pk>', MemberDetailView.as_view(), name='member_detail'),
     path('like/<int:id>', like, name='like'),
